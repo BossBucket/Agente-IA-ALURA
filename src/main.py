@@ -27,8 +27,13 @@ def iniciar_app():
             print("Saliendo ¡Hasta luego!")
             break
             
-        respuesta = mi_asistente.consultar(pregunta)
-        print(f"\nAgente: {respuesta}")
+        try:
+            respuesta = mi_asistente.consultar(pregunta)
+            print(f"\nAgente: {respuesta}")
+        except Exception as e:
+            # Si el internet falla o Google se desconecta, atrapamos el error aquí
+            print(f"\n[ERROR TÉCNICO OCULTO]: {e}")
+            print("\nAgente: tuve un pequeño problema de conexión con el servidor. ¿Podrías repetir tu respuesta?")
 
 if __name__ == "__main__":
     iniciar_app()

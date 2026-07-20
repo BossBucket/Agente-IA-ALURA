@@ -1,8 +1,9 @@
 
 from langchain_community.vectorstores import Chroma
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
+from langchain_core.messages import HumanMessage, AIMessage
 
 from src.models.my_models import embeddings, llm
 
@@ -40,18 +41,23 @@ class AgenteDocumental:
             "{context}\n"
             "---------------------\n"
         )
+        
         self.prompt = ChatPromptTemplate.from_messages([
             ("system", system_prompt),
+            MessagesPlaceholder(variable_name="chat_history"), 
             ("human", "{input}"),
         ])
         
         
         self.cadena = (
-            {"context": self.retriever | self._limpiar_docs, "input": RunnablePassthrough()}
+            RunnablePassthrough.assign(
+                context=lambda datos: self._limpiar_docs(self.retriever.invoke(datos["input"]))
+            )
             | self.prompt
             | self.llm
             | StrOutputParser()
         )
+        self.historial = []
 
     def _limpiar_docs(self, documentos):
         """Método privado para convertir los objetos de BD a texto puro."""
@@ -59,4 +65,20 @@ class AgenteDocumental:
 
     def consultar(self, pregunta):
         """Método público para interactuar con el agente."""
-        return self.cadena.invoke(pregunta)
+        
+        # 1. Ejecutamos la cadena enviando la pregunta Y el historial acumulado
+        respuesta = self.cadena.invoke({
+            "input": pregunta,
+            "chat_history": self.historial
+        })
+        
+        # 2. Guardamos la interacción actual en nuestro arreglo para el próximo turno
+        self.historial.extend([
+            HumanMessage(content=pregunta),
+            AIMessage(content=respuesta)
+        ])
+        
+        return respuesta
+    
+
+    
