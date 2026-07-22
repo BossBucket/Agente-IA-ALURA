@@ -1,7 +1,13 @@
+import sys
+from pathlib import Path
 
+ROOT_PATH = Path(__file__).resolve().parent.parent
+if str(ROOT_PATH) not in sys.path:
+    sys.path.append(str(ROOT_PATH))
+    
 import streamlit as st
 from dotenv import load_dotenv
-from agents.agents import AgenteDocumental
+from src.agents.agents import AgenteDocumental
 load_dotenv()
 
 st.set_page_config(
