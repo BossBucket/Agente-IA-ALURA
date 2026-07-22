@@ -1,26 +1,24 @@
-
-from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
+import os
 import streamlit as st
-from data.keys.my_keys import GOOGLE_API_KEY
+from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 
+# Obtener la API Key desde Streamlit Secrets o las variables de entorno locales
 GOOGLE_API_KEY = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
 
 def embeddings():
-    """Retorna el modelo de traducción de texto a vectores para la base"""
     if not GOOGLE_API_KEY:
-        raise ValueError("No se encontró la GOOGLE_API_KEY")
+        raise ValueError("No se encontró la GOOGLE_API_KEY. Configúrala en los Secrets de Streamlit o en un archivo .env.")
         
     return GoogleGenerativeAIEmbeddings(
-        model="gemini-3.5-flash",
+        model="models/embedding-001",
         google_api_key=GOOGLE_API_KEY
     )
 
-
-
 def llm():
-    """Retorna el modelo de lenguaje."""
+    if not GOOGLE_API_KEY:
+        raise ValueError("No se encontró la GOOGLE_API_KEY. Configúrala en los Secrets de Streamlit o en un archivo .env.")
+        
     return ChatGoogleGenerativeAI(
-        model="gemini-3.5-flash", 
-        google_api_key=GOOGLE_API_KEY,
-        temperature=0.3 
+        model="gemini-1.5-flash",
+        google_api_key=GOOGLE_API_KEY
     )
