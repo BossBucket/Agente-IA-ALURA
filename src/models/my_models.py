@@ -1,24 +1,23 @@
 import os
 import streamlit as st
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
-
-# Obtener la API Key desde Streamlit Secrets o las variables de entorno locales
-GOOGLE_API_KEY = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+# Carga de API Key priorizando Secrets de Streamlit
+API_KEY = st.secrets.get("GOOGLE_API_KEY") or st.secrets.get("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
 
 def embeddings():
-    if not GOOGLE_API_KEY:
-        raise ValueError("Falta la GOOGLE_API_KEY en Secrets de Streamlit.")
+    if not API_KEY:
+        raise ValueError("No se encontró GOOGLE_API_KEY en Secrets de Streamlit ni en las variables de entorno.")
     
     return GoogleGenerativeAIEmbeddings(
-        model="models/text-embedding-004",
-        google_api_key=GOOGLE_API_KEY
+        model="models/embedding-001",
+        google_api_key=API_KEY
     )
 
 def llm():
-    if not GOOGLE_API_KEY:
-        raise ValueError("Falta la GOOGLE_API_KEY en Secrets de Streamlit.")
+    if not API_KEY:
+        raise ValueError("No se encontró GOOGLE_API_KEY en Secrets de Streamlit ni en las variables de entorno.")
         
     return ChatGoogleGenerativeAI(
         model="gemini-1.5-flash",
-        google_api_key=GOOGLE_API_KEY
+        google_api_key=API_KEY
     )
