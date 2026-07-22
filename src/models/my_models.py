@@ -11,7 +11,7 @@ def obtener_api_key():
 
 def embeddings():
     return GoogleGenerativeAIEmbeddings(
-        model="models/embedding-001",
+        model="models/text-embedding-004",
         google_api_key=obtener_api_key()
     )
 
