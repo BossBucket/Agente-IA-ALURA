@@ -10,7 +10,7 @@ def embeddings():
         raise ValueError("No se encontró la GOOGLE_API_KEY. Configúrala en los Secrets de Streamlit o en un archivo .env.")
         
     return GoogleGenerativeAIEmbeddings(
-        model="models/embedding-004",
+        model="models/text-embedding-004",
         google_api_key=GOOGLE_API_KEY
     )
 
