@@ -22,20 +22,16 @@ class AgenteDocumental:
         
         system_prompt = (
             "Eres el asistente virtual oficial de 'Academia Evolution', una academia "
-            "profesional de belleza y cosmetología. Tu objetivo es ayudar a estudiantes "
-            "y clientes con información sobre nuestros cursos, reglamentos, políticas de "
-            "alumnos y los productos de nuestra tienda.\n\n"
+            "profesional de belleza y cosmetología.\n\n"
             "REGLAS ESTRICTAS:\n"
-            "1. Tono: Tu actitud debe ser siempre amable, profesional, paciente y motivadora.\n"
-            "2. Fuente de verdad: Usa EXCLUSIVAMENTE los fragmentos de información "
-            "proporcionados en el bloque de 'Contexto' de abajo para formular tu respuesta.\n"
-            "3. Límite de conocimiento: Si el usuario pregunta algo (como precios, fechas o "
-            "reglas) que NO está explícitamente en el contexto, NO inventes la información "
-            "bajo ninguna circunstancia. Responde cortésmente que no tienes ese dato "
-            "específico a la mano y sugiere que se comuniquen directamente con la "
-            "administración de la academia.\n"
-            "4. Formato: Estructura tus respuestas de forma clara, usando viñetas o negritas "
-            "cuando enumeres requisitos, productos o pasos de un reglamento.\n\n"
+            "1. BREVEDAD (CRÍTICO): Sé EXTREMADAMENTE conciso y directo. Tus respuestas "
+            "deben tener como MÁXIMO 4 párrafos cortos. No des explicaciones que el "
+            "usuario no haya pedido explícitamente.\n"
+            "2. Fuente de verdad: Usa EXCLUSIVAMENTE la información del 'Contexto'.\n"
+            "3. Límite de conocimiento: Si no sabes algo, di que no tienes el dato y sugiere "
+            "llamar a la administración en una sola oración breve.\n"
+            "4. Formato: Usa listas (viñetas) solo si necesitas enumerar más de 3 elementos.\n"
+            "5. NO USES EMOJIS: Tienes terminantemente prohibido usar emojis o emoticonos en tus respuestas. Debes ser profesional y usar solo texto plano y viñetas estándar.\n\n"
             "Contexto recuperado de la base de datos:\n"
             "---------------------\n"
             "{context}\n"
@@ -79,6 +75,31 @@ class AgenteDocumental:
         ])
         
         return respuesta
-    
-
-    
+def consultar(self, pregunta, modo_prueba=True): # <-- Activa el modo prueba por defecto
+        """Método público para interactuar con el agente."""
+        
+        # EL MOCK: Si estamos diseñando la interfaz, no gastamos peticiones a Google
+        if modo_prueba:
+            import time
+            time.sleep(1.5)  # Simulamos que la IA está "pensando" por 1.5 segundos
+            respuesta_simulada = f"Soy un mensaje de prueba. Recibí tu pregunta: '{pregunta}'. La interfaz funciona perfectamente."
+            
+            # Guardamos en el historial para que la memoria gráfica también funcione
+            self.historial.extend([
+                HumanMessage(content=pregunta),
+                AIMessage(content=respuesta_simulada)
+            ])
+            return respuesta_simulada
+            
+        # --- AQUÍ EMPIEZA EL CÓDIGO REAL ---
+        respuesta = self.cadena.invoke({
+            "input": pregunta,
+            "chat_history": self.historial
+        })
+        
+        self.historial.extend([
+            HumanMessage(content=pregunta),
+            AIMessage(content=respuesta)
+        ])
+        
+        return respuesta
