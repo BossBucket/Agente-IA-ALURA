@@ -3,7 +3,7 @@ import streamlit as st
 from dotenv import load_dotenv
 
 load_dotenv()
-from src.agents.agents import AgenteDocumental 
+
 st.set_page_config(
     page_title="Academia Evolution", 
     page_icon="data/assets/icon_flor_lotus_iconpage.png", 
