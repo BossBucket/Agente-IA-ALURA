@@ -7,8 +7,8 @@ GOOGLE_API_KEY = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
 
 def embeddings():
     if not GOOGLE_API_KEY:
-        raise ValueError("No se encontró la GOOGLE_API_KEY. Configúrala en los Secrets de Streamlit o en un archivo .env.")
-        
+        raise ValueError("Falta la GOOGLE_API_KEY en Secrets de Streamlit.")
+    
     return GoogleGenerativeAIEmbeddings(
         model="models/text-embedding-004",
         google_api_key=GOOGLE_API_KEY
@@ -16,7 +16,7 @@ def embeddings():
 
 def llm():
     if not GOOGLE_API_KEY:
-        raise ValueError("No se encontró la GOOGLE_API_KEY. Configúrala en los Secrets de Streamlit o en un archivo .env.")
+        raise ValueError("Falta la GOOGLE_API_KEY en Secrets de Streamlit.")
         
     return ChatGoogleGenerativeAI(
         model="gemini-1.5-flash",
