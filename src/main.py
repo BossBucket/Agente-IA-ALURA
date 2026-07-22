@@ -39,7 +39,7 @@ def iniciar_app():
                 time.sleep(30)
                 
                 print("Agente: ¡Listo! ¿Me puedes repetir tu última pregunta?")
-            if "503" in error_str or "UNAVAILABLE" in error_str or "429" in error_str:
+            elif "503" in error_str or "UNAVAILABLE" in error_str or "429" in error_str:
                 str.warning("⚠️ **Servidores ocupados:** Google está experimentando un alto tráfico en este momento. Por favor, espera 15 segundos y reenvía tu mensaje.")
             
             else:
