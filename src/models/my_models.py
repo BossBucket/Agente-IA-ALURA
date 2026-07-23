@@ -19,7 +19,6 @@ def obtener_api_key():
     raise ValueError("No se encontró GOOGLE_API_KEY en Secrets de Streamlit.")
 
 def embeddings():
-    # Usar la clase de langchain_community evita el bug de 'cache_folder'
     return HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
 def llm():
