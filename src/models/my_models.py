@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import FastEmbedEmbeddings
 
 def obtener_api_key():
     try:
@@ -19,7 +19,8 @@ def obtener_api_key():
     raise ValueError("No se encontró GOOGLE_API_KEY en Secrets de Streamlit.")
 
 def embeddings():
-    return HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    # FastEmbed no requiere PyTorch ni sentence-transformers. Es liviano e inmune a bucles.
+    return FastEmbedEmbeddings(model_name="BAAI/bge-small-en-v1.5")
 
 def llm():
     return ChatGoogleGenerativeAI(
