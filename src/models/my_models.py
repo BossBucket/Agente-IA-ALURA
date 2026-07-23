@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
 def obtener_api_key():
     try:
@@ -19,7 +19,7 @@ def obtener_api_key():
     raise ValueError("No se encontró GOOGLE_API_KEY en Secrets de Streamlit.")
 
 def embeddings():
-    # Modelo ligero, estándar y compatible con cualquier vectorstore RAG
+    # Usar la clase de langchain_community evita el bug de 'cache_folder'
     return HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
 def llm():
