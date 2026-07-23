@@ -6,6 +6,8 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.messages import HumanMessage, AIMessage
 
 from src.models.my_models import embeddings, llm
+from src.utils.pdf_processor import obtener_o_crear_vectorstore
+
 
 class AgenteDocumental:
     def __init__(self, ruta_bd="data/processed"):
@@ -13,12 +15,8 @@ class AgenteDocumental:
         self.embeddings = embeddings()
         self.llm = llm()
         
-        self.db = Chroma(
-            persist_directory=ruta_bd, 
-            embedding_function=self.embeddings
-        )
-        self.retriever = self.db.as_retriever(search_kwargs={"k": 3})
-        
+        self.vectorstore = obtener_o_crear_vectorstore()
+        self.retriever = self.vectorstore.as_retriever(search_kwargs={"k": 3})
         
         system_prompt = (
             "Eres el asistente virtual oficial de 'Academia Evolution', una academia "
